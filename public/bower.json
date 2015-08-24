@@ -1,0 +1,24 @@
+{
+  "name": "P2",
+  "version": "0.0.0",
+  "description": "Test From to LogMeIn",
+  "main": "index.html",
+  "keywords": [
+    "user",
+    "form"
+  ],
+  "authors": [
+    "Loopilla"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap-css": "~3.3.4",
+    "angular": "~1.4.4",
+    "angular-messages": "~1.4.4",
+    "angular-route": "~1.4.4",
+    "font-awesome": "~4.4.0",
+    "angucomplete-alt": "~1.1.0",
+    "wow": "~1.1.2",
+    "animate.css": "~3.4.0"
+  }
+}

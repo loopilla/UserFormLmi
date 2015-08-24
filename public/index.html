@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
+    <title>Document</title>
+    <link rel="stylesheet" href="bower_components/bootstrap-css/css/bootstrap.css" >
+    <link rel="stylesheet" href="bower_components/angucomplete-alt/angucomplete-alt.css" >
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="./bower_components/animate.css/animate.min.css">
+    <link rel="stylesheet" href="css/form.css" >
+
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+    <script src="bower_components/angucomplete-alt/dist/angucomplete-alt.min.js"></script>
+    <script src="js/ui-bootstrap-custom-tpls-0.13.3.min.js"></script>
+    <script src="js/datepicker.js"></script>
+    <script src="bower_components/wow/dist/wow.min.js"></script>
+    <script src="js/app.js"></script>
+</head>
+<body ng-app="app">
+    <div id="mainContainer">
+        <div class="formContainer">
+            <header>
+                <h1 class="text-center wow lightSpeedIn">User form</h1>
+                <h4 class="text-center wow bounceInUp"><small>by Ferenc Szujó</small></h4>                
+            </header>
+
+    	    <div class="container-fluid">
+                <form name="userForm" ng-controller="FormController as formCtrl" novalidate>
+                    <div class="form-group" ng-class="{ 'has-error': userForm.name.$touched && userForm.name.$invalid }">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="name" class="control-label wow fadeInLeft" data-wow-delay="0.5s">Name</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" ng-model="user.name" name="name" class="form-control wow rollIn" data-wow-delay="0.5s" placeholder="John Doe" required>
+                            </div>
+                        </div>
+                        <div class="errmsg" ng-messages="userForm.name.$error" ng-show="userForm.name.$touched">
+                            <span ng-message="required">Required field.</span>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error': userForm.email.$touched && userForm.email.$invalid }">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="email" class="control-label wow fadeInLeft" data-wow-delay="1.0s">Email</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="email" name="email" ng-model="user.email" class="form-control wow rollIn" placeholder="abc@xyz.com" data-wow-delay="1.0s" required>
+                            </div>
+                        </div>
+                        <div class="errmsg" ng-messages="userForm.email.$error" ng-show="userForm.email.$touched">
+                            <span ng-message="required">Required field.</span>
+                            <span ng-message="email">Wrong email format.</span>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-controller="DatepickerCtrl as dateCtrl" ng-class="{ 'has-error': userForm.birthDate.$touched && userForm.birthDate.$invalid }">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="birthDate" class="control-label wow fadeInLeft" data-wow-delay="1.5s">Birth date</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group wow rollIn" data-wow-delay="1.5s">
+                                    <input type="text" name="birthDate" class="form-control" datepicker-popup="{{format}}" ng-model="user.birthDate" is-open="status.opened" min-date="startDate" max-date="'2020-06-22'" datepicker-options="dateOptions" close-text="Close" under18 readonly/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($event)" title="Select"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        <button type="button" class="btn btn-default" ng-click="clear($event)" title="Clear"><i class="glyphicon glyphicon-remove"></i></button>                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="errmsg" ng-messages="userForm.birthDate.$error" ng-show="userForm.birthDate.$touched">
+                            <span ng-message="under18">You are under 18.</span>
+                            <span ng-message="date">Invalid date.</span>
+                        </div>
+                    </div>
+                    <div class="form-group bottomxxl">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label wow fadeInLeft" data-wow-delay="2s" for="occupation">Occupation</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="wow rollIn" data-wow-delay="2s">
+                                    <angucomplete-alt id="occupation"
+                                            placeholder="Search occupation"
+                                            pause="100"
+                                            selected-object="getOccupationTitle"
+                                            remote-url="/api/occupation?searchstr="
+                                            remote-url-data-field="results"
+                                            search-fields="name"
+                                            title-field="name"
+                                            minlength="3"
+                                            input-class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                        
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-xs-offset-4 wow bounceInLeft bottomSpace" data-wow-delay="2.5s">
+                                <button id="submitbtn" name="submit" class="btn btn-primary" ng-click="submitUser()" ng-disabled="userForm.name.$invalid || userForm.email.$invalid || userForm.birthDate.$invalid">Submit</button>
+                                <button id="resetbtn" name="reset" class="btn btn-primary" ng-click="reset()">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row empty"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
